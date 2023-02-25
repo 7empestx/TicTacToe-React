@@ -4,20 +4,19 @@ import Square from "./square.js";
 function Board(props) {
   function renderSquare(i) {
     const { squares, onClick, winningLine } = props;
-    console.log(winningLine);
+    
+    const winningStatus = winningLine && winningLine.includes(i)  ? true : false;
+    const draw          = !squares.includes(null) && !winningLine ? true : false;
 
-    if (winningLine && winningLine.includes(i)) {
-      return (
-        <Square
-          value={squares[i]}
-          onClick={() => onClick(i)}
-          key={i}
-          winningSquare={true}
-        />
-      );
-    } else {
-        return <Square value={squares[i]} onClick={() => onClick(i)} key={i} />;
-    }
+    return (
+      <Square 
+        value         = {squares[i]}
+        onClick       = {() => onClick(i)}
+        key           = {i}
+        winningSquare = {winningStatus}
+        draw          = {draw}
+      />
+    );
   }
 
   function getRow(start) {

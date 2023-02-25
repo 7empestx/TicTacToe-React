@@ -10,6 +10,10 @@ function Game() {
   const [stepNumber, setStepNumber] = useState(0);
   const [xIsNext, setXIsNext] = useState(true);
 
+  const [isSortingAscending, setIsSortingAscending] = useState(true);
+  const toggleSorting = () => setIsSortingAscending(prevState => !prevState);
+  const sortButtonText = isSortingAscending ? 'Sort Descending' : 'Sort Ascending';
+
   const handleClick = (i) => {
     const currentHistory = history.slice(0, stepNumber + 1);
     const current = currentHistory[currentHistory.length - 1];
@@ -76,23 +80,25 @@ function Game() {
     );
   });
 
-  const status = winner ? `Winner: ${winner}` : `Next player: ${xIsNext ? 'X' : 'O'}`;
-
-  const [sortAsc, setSortAsc] = useState(true);
-  const sort = <button onClick={() => setSortAsc(!sortAsc)}>{sortAsc ? 'Sort Descending' : 'Sort Ascending'}</button>;
+  const draw = !current.squares.includes(null) && !winner;
+  const winnerOrNextPlayer = winner ? `Winner: ${winner}` : `Next player: ${xIsNext ? 'X' : 'O'}`;
+  const status = draw ? 'Draw' : winnerOrNextPlayer;
 
   return (
     <div className="game">
       <div className="game-board">
-        <Board squares={current.squares}onClick={(i) => handleClick(i)}winningLine={_winningLine}/>
+        <Board squares={current.squares} onClick={handleClick} winningLine={_winningLine}/>
       </div>
       <div className="game-info">
         <div>{status}</div>
-        <div className="sort-button">{sort}</div>
-        <ol>{sortAsc ? moves : moves.reverse()}</ol>
+        <div className="sort-button">
+          <button onClick={toggleSorting}>{sortButtonText}</button>
+        </div>
+        <ol>{isSortingAscending ? moves : moves.slice().reverse()}</ol>
       </div>
     </div>
   );
+
 }
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
