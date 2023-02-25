@@ -3,14 +3,27 @@ import Square from "./square.js";
 
 function Board(props) {
   function renderSquare(i) {
-    const { squares, onClick } = props;
-    return <Square value={squares[i]} onClick={() => onClick(i)} key={i} />;
+    const { squares, onClick, winningLine } = props;
+    console.log(winningLine);
+
+    if (winningLine && winningLine.includes(i)) {
+      return (
+        <Square
+          value={squares[i]}
+          onClick={() => onClick(i)}
+          key={i}
+          winningSquare={true}
+        />
+      );
+    } else {
+        return <Square value={squares[i]} onClick={() => onClick(i)} key={i} />;
+    }
   }
 
   function getRow(start) {
     const range = Array.from({ length: 3 }, (_, i) => start + i);
     return (
-      <div className="board-row">
+      <div key={start} className="board-row">
         {range.map((number) => renderSquare(number))}
       </div>
     );
@@ -19,7 +32,7 @@ function Board(props) {
   function buildBoard() {
     return Array.from({ length: 3 }, (_, i) => getRow(i * 3));
   }
-
+  
   return <div>{buildBoard()}</div>;
 }
 

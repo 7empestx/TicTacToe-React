@@ -33,6 +33,7 @@ function Game() {
     setXIsNext(step % 2 === 0);
   }
 
+  let _winningLine;
   const calculateWinner = (squares) => {
     const lines = [
       [0, 1, 2],
@@ -44,11 +45,11 @@ function Game() {
       [0, 4, 8],
       [2, 4, 6],
     ];
-
     for (let i = 0; i < lines.length; i++) {
       const [a, b, c] = lines[i];
 
       if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
+        _winningLine = lines[i];
         return squares[a];
       }
     }
@@ -78,16 +79,16 @@ function Game() {
   const status = winner ? `Winner: ${winner}` : `Next player: ${xIsNext ? 'X' : 'O'}`;
 
   const [sortAsc, setSortAsc] = useState(true);
-  const sort = <button onClick={() => setSortAsc(!sortAsc)}>{sortAsc ? 'Sort Desc' : 'Sort Asc'}</button>;
+  const sort = <button onClick={() => setSortAsc(!sortAsc)}>{sortAsc ? 'Sort Descending' : 'Sort Ascending'}</button>;
 
   return (
     <div className="game">
       <div className="game-board">
-        <Board squares={current.squares}onClick={(i) => handleClick(i)}/>
+        <Board squares={current.squares}onClick={(i) => handleClick(i)}winningLine={_winningLine}/>
       </div>
       <div className="game-info">
         <div>{status}</div>
-        <div>{sort}</div>
+        <div className="sort-button">{sort}</div>
         <ol>{sortAsc ? moves : moves.reverse()}</ol>
       </div>
     </div>
